@@ -1,0 +1,20 @@
+from fastapi import FastAPI, Header, HTTPException
+
+app = FastAPI()
+
+@app.get("/")
+def root():
+    return {"status": "Hackstrom Voice API running"}
+
+@app.post("/analyze")
+def analyze(data: dict, x_api_key: str = Header(None)):
+    if x_api_key != "ShieldAI206":
+        raise HTTPException(status_code=401, detail="Unauthorized")
+
+    if "audio_base64" not in data:
+        raise HTTPException(status_code=400, detail="Missing audio_base64")
+
+    return {
+        "prediction": "HUMAN",
+        "confidence": 0.75
+    }
